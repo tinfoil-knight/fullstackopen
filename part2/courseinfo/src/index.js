@@ -28,11 +28,8 @@ const Content = ({course}) => {
 
 const Part = ({part}) => {
 
-  let sum = 0;
-
-  for (let i=0; i < part.length; i++){
-    sum += part[i].exercises
-  }
+  const y = part.map(x => x.exercises)
+  const z = y.reduce((a,b) => a+b, 0)
 
   return (
     <>
@@ -40,7 +37,7 @@ const Part = ({part}) => {
       <p key={content.id}>
       {content.name} {content.exercises}
       </p>)}
-    <p><b>total of {sum} exercises</b></p>
+      <p><b>total of {z} exercises</b></p>
     </>
   )
 }
