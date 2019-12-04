@@ -11,11 +11,25 @@ const App = () => {
   const addName = (event) =>
   {
     event.preventDefault()
-    const nameObj = {
-      name: newName,
+
+    const checker = persons.filter(person => person.name===newName);
+    if (newName){
+      if (checker.length!==0){
+        // notice how a variable and string are joined here using a template literals
+        // NB: `` (backtick) are used, not "" or '' (quotes)
+        window.alert(`${newName} is already added to phonebook`)
+        // alt: newName + "is already added to phonebook"
+      }
+      else{
+        const nameObj = {
+          name: newName,
+        }
+        setPersons(persons.concat(nameObj))
+        setNewName("")
+      }
     }
-    setPersons(persons.concat(nameObj))
-    setNewName("")
+
+
   }
 
   // for input
