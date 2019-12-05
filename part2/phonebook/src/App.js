@@ -1,4 +1,7 @@
 import React, { useState } from 'react'
+import Contacts from './components/Contacts'
+import Form from './components/Form'
+import Filter from './components/Filter'
 
 const App = () => {
 
@@ -71,33 +74,16 @@ const App = () => {
     ? filterItems(persons, newQuery)
     : persons
 
-  // display component (factor this out)
-  const rows = () => {
-    return (
-      namesToShow.map(el => <p key={el.name}>{el.name} {el.number}</p>)
-    )
-  }
+// The way of passing properties to components is not good. Please find a way to do this properly.
 
   return (
     <div>
       <h1>Phonebook</h1>
-      <form>
-        <div>
-          <div>filter shown with <input value={newQuery} onChange={handleQueryChange}/></div>
-        </div>
-      </form>
-      <h2>add a new</h2>
-      <form onSubmit={addContact}>
-        <div>
-          <div>name: <input value={newName} onChange={handleNameChange} /></div>
-          <div>number: <input value={newNumber} onChange={handleNumberChange} /></div>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {rows()}
+      <Filter newQuery={newQuery} handleQueryChange={handleQueryChange}/>
+      <h3>Add a new</h3>
+      <Form addContact={addContact} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}/>
+      <h3>Numbers</h3>
+      <Contacts namesToShow={namesToShow} />
     </div>
   )
 
