@@ -1,25 +1,36 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import Contacts from './components/Contacts'
 import Form from './components/Form'
 import Filter from './components/Filter'
 
 const App = () => {
 
-  const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ])
+  // const [ persons, setPersons ] = useState([
+  //   { name: 'Arto Hellas', number: '040-123456' },
+  //   { name: 'Ada Lovelace', number: '39-44-5323523' },
+  //   { name: 'Dan Abramov', number: '12-43-234345' },
+  //   { name: 'Mary Poppendieck', number: '39-23-6423122' }
+  // ])
 
-  // const [ persons, setPersons] = useState([])
+  const [ persons, setPersons] = useState([])
 
   // state handlers
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newQuery, setNewQuery ] = useState('')
 
-  //event handler for search query
+  // fetching initial state of persons
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data)
+      })
+  }, [])
+  // useEffect is an effect hook. useState is used for DOM Change, useEffect is used for data fetching.
+
+  // event handler for search query
   const handleQueryChange = (event) =>
   {
     setNewQuery(event.target.value)
@@ -43,7 +54,7 @@ const App = () => {
     if (newName){
       if (checker.length!==0){
         // notice how a variable and string are joined here using a template literal
-        // NB: `` (backtick) are used, not "" or '' (quotes)
+        // NB: `` (backticks) are used, not "" or '' (quotes)
         window.alert(`${newName} is already added to phonebook`)
         // alt: newName + "is already added to phonebook"
       }
