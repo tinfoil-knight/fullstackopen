@@ -13,7 +13,7 @@ const App = () => {
   //   { name: 'Mary Poppendieck', number: '39-23-6423122' }
   // ])
 
-  const [ persons, setPersons] = useState([])
+  const [ persons, setPersons ] = useState([])
 
   // state handlers
   const [ newName, setNewName ] = useState('')
