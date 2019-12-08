@@ -24,9 +24,7 @@ const App = () => {
   useEffect(() => {
     axios
       .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-      })
+      .then(response => {setPersons(response.data)})
   }, [])
   // useEffect is an effect hook. useState is used for DOM Change, useEffect is used for data fetching.
 
@@ -63,7 +61,16 @@ const App = () => {
           name: newName,
           number: newNumber,
         }
-        setPersons(persons.concat(contactObj))
+
+        // Sending data to db.json(and saving it there), getting a response in return
+        // If response is successful, Object received with contents same as contactObj
+        axios
+          .post('http://localhost:3001/persons', contactObj)
+          .then(response => {setPersons(persons.concat(contactObj))})
+          .catch(error => {alert(
+            `the contact was not added to the server`
+          )})
+
         setNewName("")
         setNewNumber("")
       }
