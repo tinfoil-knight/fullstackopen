@@ -1,17 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import Contacts from './components/Contacts'
 import Form from './components/Form'
 import Filter from './components/Filter'
+import service from './services/persons'
 
 const App = () => {
-
-  // const [ persons, setPersons ] = useState([
-  //   { name: 'Arto Hellas', number: '040-123456' },
-  //   { name: 'Ada Lovelace', number: '39-44-5323523' },
-  //   { name: 'Dan Abramov', number: '12-43-234345' },
-  //   { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  // ])
 
   const [ persons, setPersons ] = useState([])
 
@@ -21,11 +14,7 @@ const App = () => {
   const [ newQuery, setNewQuery ] = useState('')
 
   // fetching initial state of persons
-  useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {setPersons(response.data)})
-  }, [])
+  useEffect(() => {service.getAll().then(initialContacts => {setPersons(initialContacts)})}, [])
   // useEffect is an effect hook. useState is used for DOM Change, useEffect is used for data fetching.
 
   // event handler for search query
@@ -64,10 +53,8 @@ const App = () => {
 
         // Sending data to db.json(and saving it there), getting a response in return
         // If response is successful, Object received with contents same as contactObj
-        axios
-          .post('http://localhost:3001/persons', contactObj)
-          .then(response => {setPersons(persons.concat(contactObj))})
-          .catch(error => {alert(
+        service.create(contactObj).then(returnedContacts => {setPersons(persons.concat(returnedContacts))})
+        .catch(error => {alert(
             `the contact was not added to the server`
           )})
 
