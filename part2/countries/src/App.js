@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const Result = ({results, query, handleBtn}) => {
+const Result = ({results, query, handleBtn, weather}) => {
   const len = results.length
+
   if (len > 10 && query){
     return (
       <>
@@ -22,32 +23,59 @@ const Result = ({results, query, handleBtn}) => {
   }
 
   else if (len===1) {
-    return (
-      <>
-        <h1>{results[0].name}</h1>
-          <p>capital {results[0].capital}</p>
-          <p>population {results[0].population}</p>
-        <h3>languages</h3>
-        <ul type="disc">
-          {results[0].languages.map(el => <li key={el.name}>{el.name}</li>)}
-        </ul>
-        <img alt="flag" src={results[0].flag} width="100" height="100" />
-      </>
-    )
-  }
+    if (weather!==undefined){
+      return (
+        <>
+          <h1>{results[0].name}</h1>
+            <p>capital {results[0].capital}</p>
+            <p>population {results[0].population}</p>
+          <h3>languages</h3>
+          <ul type="disc">
+            {results[0].languages.map(el => <li key={el.name}>{el.name}</li>)}
+          </ul>
+          <img alt="flag" src={results[0].flag} width="100" height="100" />
+          <h3>Weather in {results[0].capital}</h3>
+          <p><b>temperature: </b>{weather.temperature} Celsius</p>
+          <p><img alt="descriptor" src={weather.weather_icons} /></p>
+          <p><b>wind: </b>{weather.wind_speed} kph direction {weather.wind_dir}</p>
+          </>
+        )
+        }
+
+    else{
+          return(
+            <>
+            <h1>{results[0].name}</h1>
+              <p>capital {results[0].capital}</p>
+              <p>population {results[0].population}</p>
+            <h3>languages</h3>
+            <ul type="disc">
+              {results[0].languages.map(el => <li key={el.name}>{el.name}</li>)}
+            </ul>
+            <img alt="flag" src={results[0].flag} width="100" height="100" />
+            <p>Weather API usage has exceeded access for the host of this server.</p>
+            </>
+          )
+        }
+
+      }
 
   else {
-    return (
-      <>
-      </>
-    )
-  }
-}
+        return (
+          <>
+          </>
+        )
+      }
+
+    }
+
 
 const App = () => {
   // state handlers
   const [ data, setData ] = useState([])
   const [ query, setQuery ] = useState("")
+
+  const [ weather, setWeather] = useState([])
 
   // fetching data
   useEffect(() => {
@@ -74,7 +102,14 @@ const App = () => {
   // event handler for show button
   const handleBtn = (event) => {
     setQuery(event.target.value)
-    console.log(query)
+  }
+
+  if (results.length===1){
+    setInterval(axios
+    .get('http://api.weatherstack.com/current?access_key=process.env.REACT_APP_API_KEY&query=results[0].capital&units=m')
+    .then(response => {
+      setWeather(response.data.current)
+    }), 1000000)
   }
 
 
@@ -84,7 +119,7 @@ const App = () => {
       find countries
       <input onChange={handleQueryChange} />
     </form>
-    <Result results={results} query={query} handleBtn={handleBtn}/>
+    <Result results={results} query={query} handleBtn={handleBtn} weather={weather}/>
     </>
   )
 }
