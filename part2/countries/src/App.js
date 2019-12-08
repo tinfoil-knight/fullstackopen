@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const Result = ({results, query}) => {
+const Result = ({results, query, handleBtn}) => {
   const len = results.length
   if (len > 10 && query){
     return (
@@ -11,11 +11,11 @@ const Result = ({results, query}) => {
     )
   }
 
-  else if (len > 1 && len <=10){
+  else if (len > 1 && len <= 10){
     return (
       <>
           <ul type="none">
-            {results.map(el => <li key={el.callingCodes}>{el.name}</li>)}
+            {results.map(el => <li key={el.callingCodes}>{el.name} <button value={el.name} onClick={handleBtn}>show</button></li>)}
           </ul>
       </>
     )
@@ -71,6 +71,12 @@ const App = () => {
   // filtered data
   const results = filterItems(data, query)
 
+  // event handler for show button
+  const handleBtn = (event) => {
+    setQuery(event.target.value)
+    console.log(query)
+  }
+
 
   return (
     <>
@@ -78,7 +84,7 @@ const App = () => {
       find countries
       <input onChange={handleQueryChange} />
     </form>
-    <Result results={results} query={query}/>
+    <Result results={results} query={query} handleBtn={handleBtn}/>
     </>
   )
 }
