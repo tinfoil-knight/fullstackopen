@@ -8,12 +8,23 @@ const Notification = ({ message }) => {
   if (message === null) {
     return null
   }
+  else {
+    if (message.type === 'success'){
+      return (
+        <div className="success">
+          {message.text}
+        </div>
+      )
+    }
+    else {
+      return (
+        <div className='error'>
+          {message.text}
+        </div>
+      )
+    }
+  }
 
-  return (
-    <div className="success">
-      {message}
-    </div>
-  )
 }
 
 const App = () => {
@@ -25,7 +36,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newQuery, setNewQuery ] = useState('')
-  const [addMessage, setMessage] = useState(null)
+  const [ addMessage, setMessage] = useState(null)
 
   // function for filtering using indexOf
   const filterItems = (array, query) => {
@@ -39,11 +50,6 @@ const App = () => {
   const handleQueryChange = (event) => {
     setNewQuery(event.target.value)
   }
-
-
-
-
-
 
   // event handler for form
   const addContact = (event) => {
@@ -69,13 +75,18 @@ const App = () => {
             .updateContact(checker[0].id, changedContact)
             .then(returnedContact =>{
               setPersons(persons.map(el =>el.id !== checker[0].id ? el : returnedContact))})
-            .catch(error => {alert('the contact was not updated at the server')})
-          }
+              .catch(error => {
+                setMessage({text:`Information of ${checker[0].name} has already been removed from server`, type:'error'})
+                setTimeout(() => {setMessage(null)}, 3000)
+                setPersons(persons.filter(el => el.id !== checker[0].id))
+              })
+            // .catch(error => {alert('the contact was not updated at the server')})
 
           setNewName("")
           setNewNumber("")
         }
       }
+    }
 
       else{
         const contactObj = {
@@ -90,7 +101,7 @@ const App = () => {
         .then(returnedContacts => {
           setPersons(persons.concat(returnedContacts))
           // message for successful addition of contact
-          setMessage(`Added ${contactObj.name}`)
+          setMessage({text:`Added ${contactObj.name}`, type:'success'})
           setTimeout(() => {setMessage(null)}, 3000)
         })
         .catch(error => {alert('the contact was not added to the server')})
