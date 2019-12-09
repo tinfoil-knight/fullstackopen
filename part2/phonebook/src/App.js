@@ -53,10 +53,10 @@ const App = () => {
 
         // Sending data to db.json(and saving it there), getting a response in return
         // If response is successful, Object received with contents same as contactObj
-        service.create(contactObj).then(returnedContacts => {setPersons(persons.concat(returnedContacts))})
-        .catch(error => {alert(
-            `the contact was not added to the server`
-          )})
+        service
+        .createContact(contactObj)
+        .then(returnedContacts => {setPersons(persons.concat(returnedContacts))})
+        .catch(error => {alert('the contact was not added to the server')})
 
         setNewName("")
         setNewNumber("")
@@ -64,7 +64,17 @@ const App = () => {
     }
   }
 
-  // event handler for input fields
+  const handleDelete = (event) => {
+    if(window.confirm(`Delete ${event.target.name} ?`)){
+      service
+      .deleteContact(event.target.value)
+      .catch(error => {alert('the contact was not deleted from the server')})
+
+      setPersons(persons.filter(el => el.name !== event.target.name))
+    }
+  }
+
+  // event handler for input fieldss
   const handleNameChange = (event) =>
   {
     setNewName(event.target.value)
@@ -88,7 +98,7 @@ const App = () => {
       <h3>Add a new</h3>
       <Form addContact={addContact} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}/>
       <h3>Numbers</h3>
-      <Contacts namesToShow={namesToShow} />
+      <Contacts namesToShow={namesToShow} handleDelete={handleDelete}/>
     </div>
   )
 
