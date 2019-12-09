@@ -4,47 +4,62 @@ import Form from './components/Form'
 import Filter from './components/Filter'
 import service from './services/persons'
 
+
 const App = () => {
 
-  const [ persons, setPersons ] = useState([])
 
   // state handlers
+  const [ persons, setPersons ] = useState([])
+
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newQuery, setNewQuery ] = useState('')
-
-  // fetching initial state of persons
-  useEffect(() => {service.getAll().then(initialContacts => {setPersons(initialContacts)})}, [])
-  // useEffect is an effect hook. useState is used for DOM Change, useEffect is used for data fetching.
-
-  // event handler for search query
-  const handleQueryChange = (event) =>
-  {
-    setNewQuery(event.target.value)
-  }
 
   // function for filtering using indexOf
   const filterItems = (array, query) => {
     return array.filter(el => el.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
-  // The indexOf() method returns the position of the first occurrence of a specified value in a string.
-  // This method returns -1 if the value to search for never occurs.
-  // Note: The indexOf() method is case sensitive.
 
+  // fetching initial state of persons from json-server
+  useEffect(() => {service.getAll().then(initialContacts => {setPersons(initialContacts)})}, [])
+
+  // event handler for search query
+  const handleQueryChange = (event) => {
+    setNewQuery(event.target.value)
+  }
 
   // event handler for form
-  const addContact = (event) =>
-  {
+  const addContact = (event) => {
     event.preventDefault()
 
-    const checker = persons.filter(person => person.name===newName);
+    const checker = persons.filter(person => person.name===newName)
+
     if (newName){
+
       if (checker.length!==0){
-        // notice how a variable and string are joined here using a template literal
-        // NB: `` (backticks) are used, not "" or '' (quotes)
-        window.alert(`${newName} is already added to phonebook`)
-        // alt: newName + "is already added to phonebook"
+
+        if (!newNumber || newNumber===checker[0].number){
+          window.alert(`${newName} is already added to phonebook`)
+        }
+
+        else {
+          // updating contacts
+          if(window.confirm(`${checker[0].name} is already added to the phonebook, replace the old number with the new one?`)){
+            const contact = persons.find(el => el.id === checker[0].id)
+            const changedContact = { ...contact, number: newNumber }
+
+            service
+            .updateContact(checker[0].id, changedContact)
+            .then(returnedContact =>{
+              setPersons(persons.map(el =>el.id !== checker[0].id ? el : returnedContact))})
+            .catch(error => {alert('the contact was not updated at the server')})
+          }
+
+          setNewName("")
+          setNewNumber("")
+        }
       }
+
       else{
         const contactObj = {
           name: newName,
@@ -64,6 +79,7 @@ const App = () => {
     }
   }
 
+  // event handler for deletion
   const handleDelete = (event) => {
     if(window.confirm(`Delete ${event.target.name} ?`)){
       service
@@ -74,13 +90,12 @@ const App = () => {
     }
   }
 
-  // event handler for input fieldss
-  const handleNameChange = (event) =>
-  {
+  // event handler for input fields
+  const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
-  const handleNumberChange = (event) =>
-  {
+
+  const handleNumberChange = (event) => {
     setNewNumber(event.target.value)
   }
 
@@ -89,8 +104,8 @@ const App = () => {
     ? filterItems(persons, newQuery)
     : persons
 
-// The way of passing properties to components is not good. Please find a way to do this properly.
 
+// The way of passing properties to components is not good. Please find a way to do this properly.
   return (
     <div>
       <h1>Phonebook</h1>
@@ -102,6 +117,8 @@ const App = () => {
     </div>
   )
 
+
 }
+
 
 export default App
