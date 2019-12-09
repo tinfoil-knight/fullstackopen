@@ -4,6 +4,17 @@ import Form from './components/Form'
 import Filter from './components/Filter'
 import service from './services/persons'
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="success">
+      {message}
+    </div>
+  )
+}
 
 const App = () => {
 
@@ -14,6 +25,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newQuery, setNewQuery ] = useState('')
+  const [addMessage, setMessage] = useState(null)
 
   // function for filtering using indexOf
   const filterItems = (array, query) => {
@@ -27,6 +39,11 @@ const App = () => {
   const handleQueryChange = (event) => {
     setNewQuery(event.target.value)
   }
+
+
+
+
+
 
   // event handler for form
   const addContact = (event) => {
@@ -70,7 +87,12 @@ const App = () => {
         // If response is successful, Object received with contents same as contactObj
         service
         .createContact(contactObj)
-        .then(returnedContacts => {setPersons(persons.concat(returnedContacts))})
+        .then(returnedContacts => {
+          setPersons(persons.concat(returnedContacts))
+          // message for successful addition of contact
+          setMessage(`Added ${contactObj.name}`)
+          setTimeout(() => {setMessage(null)}, 3000)
+        })
         .catch(error => {alert('the contact was not added to the server')})
 
         setNewName("")
@@ -108,6 +130,7 @@ const App = () => {
 // The way of passing properties to components is not good. Please find a way to do this properly.
   return (
     <div>
+      <Notification message={addMessage} />
       <h1>Phonebook</h1>
       <Filter newQuery={newQuery} handleQueryChange={handleQueryChange}/>
       <h3>Add a new</h3>
