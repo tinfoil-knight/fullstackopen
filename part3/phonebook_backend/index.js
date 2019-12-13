@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+const bodyParser = require('body-parser')
+app.use(bodyParser.json())
 
 let persons = [
     {
@@ -41,6 +43,23 @@ app.get('/api/persons/:id', (request, response) => {
   if (person) {response.json(person)}
   else {response.status(404).end()}
 })
+
+app.post('/api/persons', (request, response) => {
+  const person = request.body
+  // random id is generated as told
+  // But use this to sequentially generate ids:
+  //   const generateId = () => {
+  //   const maxId = notes.length > 0
+  //     ? Math.max(...notes.map(n => n.id))
+  //     : 0
+  //   return maxId + 1
+  // }
+  person.id = Math.floor(Math.random() * 5000)
+  persons = persons.concat(person)
+
+  response.json(person)
+})
+
 
 app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
