@@ -4,6 +4,9 @@ const app = express()
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 
+const morgan = require('morgan')
+app.use(morgan('tiny'))
+
 let persons = [
     {
       name: "Arto Hellas",
@@ -68,7 +71,6 @@ app.post('/api/persons', (request, response) => {
 
   response.json(person)
 })
-
 
 app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
