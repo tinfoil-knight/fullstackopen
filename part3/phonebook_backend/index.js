@@ -54,6 +54,15 @@ app.post('/api/persons', (request, response) => {
   //     : 0
   //   return maxId + 1
   // }
+  if (!person.number){
+    return response.status(400).json({error: 'content missing'}).end()
+  }
+
+  const checker = persons.filter(el => el.name === person.name).length
+  if (checker){
+    return response.status(400).json({error: 'name already exists'}).end()
+  }
+
   person.id = Math.floor(Math.random() * 5000)
   persons = persons.concat(person)
 
