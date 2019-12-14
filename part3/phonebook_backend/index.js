@@ -5,7 +5,16 @@ const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 
 const morgan = require('morgan')
-app.use(morgan('tiny'))
+
+// Creating a token for accessing body of request on POST
+morgan.token('req_body', function(req, res) {
+  if (req.method === 'POST'){
+    return JSON.stringify(req.body);
+  }
+});
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :req_body'))
+
 
 let persons = [
     {
