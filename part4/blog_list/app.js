@@ -14,17 +14,16 @@ const blogRouter = require('./controllers/blogs')
 app.use('/api/blogs', blogRouter)
 
 const mongoose = require('mongoose')
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true })
 
+const logger = require('./utils/logger')
+logger.info('connecting to', config.MONGODB_URI)
 
-console.log('connecting to', process.env.MONGODB_URI)
-
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true })
+mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true })
   .then(() => {
-    console.log('connected to MongoDB')
+    logger.info('connected to MongoDB')
   })
   .catch((error) => {
-    console.log('error connection to MongoDB:', error.message)
+    logger.error('error connection to MongoDB:', error.message)
   })
 
 
