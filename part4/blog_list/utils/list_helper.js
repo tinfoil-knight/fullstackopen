@@ -28,15 +28,35 @@ const favoriteBlog = (array) => {
 
 const mostBlogs = (objArray) => {
   const authorArray = _.map(objArray, 'author')
-  const obj = _.chain(authorArray).countBy().toPairs().max(_.last)
-  
-  
-  const author = obj.head().value()
-  const numBlogs = obj.tail().value()
-  console.log(author)
+  const maxBlogs = _.chain(authorArray).countBy().toPairs().max(_.last)
+
+
+  const author = maxBlogs.head().value()
+  const numBlogs = maxBlogs.tail().value()
+
   const object = {
     author: author,
     blogs: numBlogs[0]
+  }
+  return object
+}
+
+const mostLiked = (array) => {
+  obj = {}
+  _.forEach(array, function (value) {
+    if (value.author in obj) {
+      obj[value.author] += value.likes
+    }
+    else {
+      obj[value.author] = value.likes
+    }
+  })
+
+  author = Object.keys(obj).reduce((a, b) => obj[a] > obj[b] ? a : b)
+  likes = obj[author]
+  const object = {
+    author: author,
+    likes: likes
   }
   return object
 }
@@ -45,5 +65,6 @@ module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLiked
 }
