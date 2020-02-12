@@ -1,24 +1,16 @@
-require('dotenv').config()
 const config = require('./utils/config')
-
 const express = require('express')
-const app = express()
-
 const bodyParser = require('body-parser')
-app.use(bodyParser.json())
-
+const app = express()
 const cors = require('cors')
-app.use(cors())
-
-const blogRouter = require('./controllers/blogs')
-app.use('/api/blogs', blogRouter)
-
+const blogsRouter = require('./controllers/blogs')
+const middleware = require('./utils/middleware')
 const mongoose = require('mongoose')
-
 const logger = require('./utils/logger')
+
 logger.info('connecting to', config.MONGODB_URI)
 
-mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true })
+mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true })
   .then(() => {
     logger.info('connected to MongoDB')
   })
@@ -26,10 +18,12 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true })
     logger.error('error connection to MongoDB:', error.message)
   })
 
+app.use(bodyParser.json())
+app.use(middleware.requestLogger)
 
-const PORT = 3003
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
+app.use('/api/blogs', blogsRouter)
 
-module.export = app
+app.use(middleware.unknownEndpoint)
+app.use(middleware.errorHandler)
+
+module.exports = app
