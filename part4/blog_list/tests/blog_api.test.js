@@ -14,15 +14,28 @@ beforeEach(async () => {
   await Promise.all(promiseArray)
 })
 
-test('all blogs are returned', async () => {
-  const response = await api.get('/api/blogs')
+describe('correct amount of blog posts in the JSON format', () => {
 
-  expect(response.body.length).toBe(helper.initialBlogs.length)
+  test('all blogs are returned', async () => {
+    const response = await api.get('/api/blogs')
+    expect(response.body.length).toBe(helper.initialBlogs.length)
+  })
+
+  test('response is in json format', async () => {
+    await api
+      .get('/api/blogs')
+      .expect('Content-Type', /application\/json/)
+  })
+
 })
 
-test('response is in json format', async () => {
-  await api.get('/api/blogs')
-    .expect('Content-Type', /application\/json/)
+describe('unique identifier property of the blog posts is named id', () => {
+
+  test('check for id', async () => {
+    const response = await api.get('/api/blogs')
+    expect(response.body[0].id).toBeDefined()
+  })
+
 })
 
 afterAll(() => {
