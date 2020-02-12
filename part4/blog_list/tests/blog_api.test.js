@@ -47,16 +47,36 @@ describe('successfully creates a new blog post', () => {
       url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
       likes: 2
     }
-  
+
     await api
       .post('/api/blogs')
       .send(newBlog)
       .expect(200)
       .expect('Content-Type', /application\/json/)
-  
+
     const blogsAtEnd = await helper.blogsInDb()
     expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1)
-  
+
+  })
+})
+
+describe('default value of likes', () => {
+  test('check if likes default to 0', async () => {
+    const newBlog = {
+      title: "TDD harms architecture",
+      author: "Robert C. Martin",
+      url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html"
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd[blogsAtEnd.length-1].likes).toEqual(0)
+
   })
 })
 
