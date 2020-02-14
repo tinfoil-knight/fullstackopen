@@ -99,7 +99,3 @@ describe('bad request checks', () => {
 afterAll(() => {
   mongoose.connection.close()
 })
-
-// Tests: 'default value of likes' and 'successfully creates a new blog post' stopped working
-// after adding required in Mongo schema definition.
-// They work if required property is removed from the Schema of our model.
