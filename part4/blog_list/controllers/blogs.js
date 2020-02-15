@@ -4,7 +4,7 @@ const User = require('../models/user')
 
 blogsRouter.get('/', async (request, response, next) => {
   try {
-    const blogs = await Blog.find({}).populate('user')
+    const blogs = await Blog.find({}).populate('user', { username: 1, name: 1, id: 1 })
     response.json(blogs.map(blog => blog.toJSON()))
   }
   catch (exception) {
@@ -21,7 +21,8 @@ blogsRouter.get('/:id', async (request, response, next) => {
     } else {
       response.status(404).end()
     }
-  } catch (exception) {
+  }
+  catch (exception) {
     next(exception)
   }
 })
@@ -42,8 +43,13 @@ blogsRouter.post('/', async (request, response, next) => {
     })
 
     const savedBlog = await blog.save()
+
+    user.blogs = user.blogs.concat(savedBlog._id)
+    await user.save()
+
     response.json(savedBlog.toJSON())
-  } catch (exception) {
+  }
+  catch (exception) {
     next(exception)
   }
 })
@@ -52,7 +58,8 @@ blogsRouter.delete('/:id', async (request, response, next) => {
   try {
     await Blog.findByIdAndRemove(request.params.id)
     response.status(204).end()
-  } catch (exception) {
+  }
+  catch (exception) {
     next(exception)
   }
 
