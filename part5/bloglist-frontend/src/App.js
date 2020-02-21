@@ -11,6 +11,7 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
   const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' })
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     blogService
@@ -28,6 +29,12 @@ const App = () => {
     }
   }, [])
 
+  const handleMessage = (text) => {
+    setMessage(text)
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -43,7 +50,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      alert(exception)
+      handleMessage("wrong username or password")
     }
   }
 
@@ -63,16 +70,17 @@ const App = () => {
     try {
       setNewBlog(blogObject)
       blogService
-      .create(blogObject, user.username)
-      .then(data => {
-        setBlogs(blogs.concat(data))
-        setNewBlog({title: '', author: '', url: ''})
-      })
+        .create(blogObject, user.username)
+        .then(returnedObject => {
+          setBlogs(blogs.concat(returnedObject))
+          setNewBlog({ title: '', author: '', url: '' })
+          handleMessage(`a new blog ${returnedObject.title} by ${returnedObject.author} added`)
+        })
+
     }
     catch (exception) {
       alert(exception)
     }
-    console.log("done")
 
   }
 
@@ -80,6 +88,7 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
+        <p><b>{message}</b></p>
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -99,6 +108,7 @@ const App = () => {
     <>
       <div>
         <h2>blogs</h2>
+        <p><b>{message}</b></p>
         {user.name} logged in <button type="button" onClick={handleLogout}>logout</button>
       </div>
       <div>
