@@ -60,7 +60,7 @@ const App = () => {
     }
   }
 
-  const handleLogout = (event) => {
+  const handleLogout = () => {
     window.localStorage.clear()
   }
 
