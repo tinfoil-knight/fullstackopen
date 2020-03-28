@@ -125,7 +125,7 @@ const App = () => {
           <BlogForm handleSubmit={handleSubmit} newBlog={newBlog} setVisible={setVisible} setNewBlog={setNewBlog} />
         </div>
         <div>
-          {blogs.map(blog =>
+          {blogs.sort((a, b) => (a.likes > b.likes) ? -1 : 1).map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
         </div>
