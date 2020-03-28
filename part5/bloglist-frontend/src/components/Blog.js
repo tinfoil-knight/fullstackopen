@@ -35,9 +35,23 @@ const Blog = ({ blog }) => {
     }
   }
 
+  const handleDelete = async (id) => {
+    if (window.confirm(`Remove blog?`)) {
+      try {
+        blogService
+          .deleteBlog(id)
+          // Doesn't handle the array of blog since it is here, move this out if you
+          // want to update the blog array when a blog gets deleted
+      }
+      catch (exception) {
+        alert(exception)
+      }
+    }
+
+  }
+
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
-
   return (
     <div style={blogStyle}>
       {blog.title} {blog.author}
@@ -51,10 +65,13 @@ const Blog = ({ blog }) => {
           likes {likes} <button type="button" onClick={() => handleLike(blog)}>like</button>
         </div>
         <div>
-          {blog.url}
+          {blog.user.name}
         </div>
+        <button type="button"
+          style={{ display: JSON.parse(window.localStorage.getItem('loggedBlogappUser')).username === blog.user.username ? '' : 'none' }}
+          onClick={() => handleDelete(blog.id)}>remove</button>
       </div>
-    </div>
+    </div >
   )
 }
 
