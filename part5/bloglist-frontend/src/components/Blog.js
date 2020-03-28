@@ -1,5 +1,8 @@
 import React from 'react'
 import { useState } from 'react'
+import blogService from '../services/blogs'
+
+
 
 const Blog = ({ blog }) => {
 
@@ -12,6 +15,25 @@ const Blog = ({ blog }) => {
   }
 
   const [visible, setVisible] = useState(false)
+  const [likes, setLikes] = useState(blog.likes)
+
+  const handleLike = async (blog) => {
+    const blogPost = {
+      title: blog.title,
+      likes: blog.likes + 1,
+      author: blog.author,
+      url: blog.url
+    }
+
+    try {
+      blogService
+        .update(blogPost, blog.id)
+        .then(responseObject => setLikes(responseObject.likes))
+    }
+    catch (exception) {
+      alert(exception)
+    }
+  }
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
@@ -26,7 +48,7 @@ const Blog = ({ blog }) => {
           {blog.url}
         </div>
         <div>
-          likes 0 <button type="button">like</button>
+          likes {likes} <button type="button" onClick={() => handleLike(blog)}>like</button>
         </div>
         <div>
           {blog.url}
