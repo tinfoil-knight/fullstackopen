@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const BlogForm = ({
     setVisible,
@@ -42,6 +43,13 @@ const BlogForm = ({
             </form>
         </>
     )
+}
+
+BlogForm.propTypes = {
+    setVisible: PropTypes.func.isRequired,
+    setNewBlog: PropTypes.func.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
+    newBlog: PropTypes.object.isRequired,
 }
 
 export default BlogForm
