@@ -56,7 +56,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      handleMessage("wrong username or password")
+      handleMessage('wrong username or password')
     }
   }
 
@@ -135,5 +135,4 @@ const App = () => {
 
 }
 
-export default App;
-
+export default App

@@ -37,7 +37,7 @@ const Blog = ({ blog }) => {
   }
 
   const handleDelete = async (id) => {
-    if (window.confirm(`Remove blog?`)) {
+    if (window.confirm('Remove blog?')) {
       try {
         blogService
           .deleteBlog(id)
