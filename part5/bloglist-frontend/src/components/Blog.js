@@ -41,8 +41,8 @@ const Blog = ({ blog }) => {
       try {
         blogService
           .deleteBlog(id)
-          // Doesn't handle the array of blog since it is here, move this out if you
-          // want to update the blog array when a blog gets deleted
+        // Doesn't handle the array of blog since it is here, move this out if you
+        // want to update the blog array when a blog gets deleted
       }
       catch (exception) {
         alert(exception)
@@ -53,11 +53,12 @@ const Blog = ({ blog }) => {
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
+
   return (
     <div style={blogStyle}>
       {blog.title} {blog.author}
       <button type="button" onClick={() => setVisible(true)} style={hideWhenVisible}>view</button>
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className="test">
         <button type="button" onClick={() => setVisible(false)}>hide</button>
         <div>
           {blog.url}
@@ -69,10 +70,11 @@ const Blog = ({ blog }) => {
           {blog.user.name}
         </div>
         <button type="button"
-          style={{ display: JSON.parse(window.localStorage.getItem('loggedBlogappUser')).username === blog.user.username ? '' : 'none' }}
+          // For testing
+          // style={{ display: JSON.parse(window.localStorage.getItem('loggedBlogappUser')).username === blog.user.username ? '' : 'none' }}
           onClick={() => handleDelete(blog.id)}>remove</button>
       </div>
-    </div >
+    </div>
   )
 }
 
