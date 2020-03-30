@@ -39,7 +39,7 @@ describe('Login', function () {
   })
 })
 
-describe.only('When logged in', function () {
+describe('When logged in', function () {
   beforeEach(function () {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
 
@@ -58,28 +58,28 @@ describe.only('When logged in', function () {
       })
   })
 
-  // it('A blog can be created', function () {
-  //   cy.contains('new note').click()
-  //   cy.get('#title').type('Vue vs React')
-  //   cy.get('#author').type('Henry Shaw')
-  //   cy.get('#url').type('https://www.shawhenry.com/blog/vuevsreact')
-  //   cy.get('#create').click()
-  //   cy.contains('Vue vs React')
-  //   cy.contains('Henry Shaw')
-  // })
+  it('A blog can be created', function () {
+    cy.contains('new note').click()
+    cy.get('#title').type('Vue vs React')
+    cy.get('#author').type('Henry Shaw')
+    cy.get('#url').type('https://www.shawhenry.com/blog/vuevsreact')
+    cy.get('#create').click()
+    cy.contains('Vue vs React')
+    cy.contains('Henry Shaw')
+  })
 
-  // it('User can like a blog', function () {
-  //   // Creating a Blog (Replace with POST request with a token)
-  //   cy.contains('new note').click()
-  //   cy.get('#title').type('Vue vs React')
-  //   cy.get('#author').type('Henry Shaw')
-  //   cy.get('#url').type('https://www.shawhenry.com/blog/vuevsreact')
-  //   cy.get('#create').click()
-  //   // Liking the blog
-  //   cy.contains('view').click()
-  //   cy.contains('like').click()
-  //   cy.contains('1')
-  // })
+  it('User can like a blog', function () {
+    // Creating a Blog (Replace with POST request with a token)
+    cy.contains('new note').click()
+    cy.get('#title').type('Vue vs React')
+    cy.get('#author').type('Henry Shaw')
+    cy.get('#url').type('https://www.shawhenry.com/blog/vuevsreact')
+    cy.get('#create').click()
+    // Liking the blog
+    cy.contains('view').click()
+    cy.contains('like').click()
+    cy.contains('1')
+  })
 
   it('User who created the blog can delete it', function () {
     // Creating a Blog (Replace with POST request with a token)
