@@ -58,26 +58,47 @@ describe.only('When logged in', function () {
       })
   })
 
-  it('A blog can be created', function () {
-    cy.contains('new note').click()
-    cy.get('#title').type('Vue vs React')
-    cy.get('#author').type('Henry Shaw')
-    cy.get('#url').type('https://www.shawhenry.com/blog/vuevsreact')
-    cy.get('#create').click()
-    cy.contains('Vue vs React')
-    cy.contains('Henry Shaw')
-  })
+  // it('A blog can be created', function () {
+  //   cy.contains('new note').click()
+  //   cy.get('#title').type('Vue vs React')
+  //   cy.get('#author').type('Henry Shaw')
+  //   cy.get('#url').type('https://www.shawhenry.com/blog/vuevsreact')
+  //   cy.get('#create').click()
+  //   cy.contains('Vue vs React')
+  //   cy.contains('Henry Shaw')
+  // })
 
-  it('User can like a blog', function () {
+  // it('User can like a blog', function () {
+  //   // Creating a Blog (Replace with POST request with a token)
+  //   cy.contains('new note').click()
+  //   cy.get('#title').type('Vue vs React')
+  //   cy.get('#author').type('Henry Shaw')
+  //   cy.get('#url').type('https://www.shawhenry.com/blog/vuevsreact')
+  //   cy.get('#create').click()
+  //   // Liking the blog
+  //   cy.contains('view').click()
+  //   cy.contains('like').click()
+  //   cy.contains('1')
+  // })
+
+  it('User who created the blog can delete it', function () {
     // Creating a Blog (Replace with POST request with a token)
     cy.contains('new note').click()
     cy.get('#title').type('Vue vs React')
     cy.get('#author').type('Henry Shaw')
     cy.get('#url').type('https://www.shawhenry.com/blog/vuevsreact')
     cy.get('#create').click()
-    // Liking the blog
+    // Checking that the Blog has been created
+    cy.contains('Vue vs React')
+    // Deleting the Blog
     cy.contains('view').click()
-    cy.contains('like').click()
-    cy.contains('1')
+    
+    cy.contains('remove').click().wait(200)
+    // Waiting a few seconds after clicking the remove button
+    // Refreshing the Page (State is not updated for deleted blogs yet)
+    cy.visit('http://localhost:3000')
+    // Checking that the blog has been deleted
+    cy.contains('Vue vs React').should('not.exist')
+
   })
 })
