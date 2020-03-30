@@ -21,7 +21,6 @@ describe('Login', function () {
     }
 
     cy.request('POST', 'http://localhost:3003/api/users/', user)
-
     cy.visit('http://localhost:3000')
   })
 
@@ -37,5 +36,35 @@ describe('Login', function () {
     cy.get('#password').type('aklakala')
     cy.contains('login').click()
     cy.contains('wrong username or password')
+  })
+})
+
+describe.only('When logged in', function () {
+  beforeEach(function () {
+    cy.request('POST', 'http://localhost:3003/api/testing/reset')
+
+    const user = {
+      name: 'Matti Luukkainen',
+      username: 'mluukkai',
+      password: 'salainen'
+    }
+
+    cy.request('POST', 'http://localhost:3003/api/users/', user)
+
+    cy.request('POST', 'http://localhost:3003/api/login', user)
+      .then(response => {
+        localStorage.setItem('loggedBlogappUser', JSON.stringify(response.body))
+        cy.visit('http://localhost:3000')
+      })
+  })
+
+  it('A blog can be created', function () {
+    cy.contains('new note').click()
+    cy.get('#title').type('Vue vs React')
+    cy.get('#author').type('Henry Shaw')
+    cy.get('#url').type('https://www.shawhenry.com/blog/vuevsreact')
+    cy.get('#create').click()
+    cy.contains('Vue vs React')
+    cy.contains('Henry Shaw')
   })
 })
