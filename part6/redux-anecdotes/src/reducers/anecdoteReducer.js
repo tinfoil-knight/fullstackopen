@@ -45,4 +45,22 @@ const reducer = (state = initialState, action) => {
   }
 }
 
+export const voteAction = (id) => {
+  return {
+    type: 'UPVOTE',
+    data: { id }
+  }
+}
+
+export const createAction = (content) => {
+  return {
+    type: 'NEW',
+    data: {
+      id: Number((Math.random() * 1000000).toFixed(0)),
+      content: content,
+      votes: 0
+    }
+  }
+}
+
 export default reducer
