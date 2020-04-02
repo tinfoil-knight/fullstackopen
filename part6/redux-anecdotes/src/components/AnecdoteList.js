@@ -8,6 +8,8 @@ const AnecdoteList = () => {
     const dispatch = useDispatch()
 
     const anecdotes = useSelector(state => state.anecdotes)
+    const filter = useSelector(state => state.filter)
+    const filteredAnecdotes = anecdotes.filter(anecdote => anecdote.content.includes(filter))
 
     const vote = (anecdote) => {
         dispatch(voteAction(anecdote.id))
@@ -21,17 +23,20 @@ const AnecdoteList = () => {
 
     return (
         <>
-            {anecdotes.sort((a, b) => (a.votes > b.votes) ? -1 : 1).map(anecdote =>
-                <div key={anecdote.id}>
-                    <div>
-                        {anecdote.content}
-                    </div>
-                    <div>
-                        has {anecdote.votes}
-                        <button onClick={() => vote(anecdote)}>vote</button>
-                    </div>
-                </div>
-            )
+            {
+                filteredAnecdotes
+                    .sort((a, b) => (a.votes > b.votes) ? -1 : 1)
+                    .map(anecdote =>
+                        <div key={anecdote.id}>
+                            <div>
+                                {anecdote.content}
+                            </div>
+                            <div>
+                                has {anecdote.votes}
+                                <button onClick={() => vote(anecdote)}>vote</button>
+                            </div>
+                        </div>
+                    )
             }
         </>
     )
