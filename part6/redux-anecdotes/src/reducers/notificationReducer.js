@@ -1,18 +1,28 @@
-const notificationReducer = (state = null, action) => {
+const notificationReducer = (state = [], action) => {
+    console.log('action')
+    console.log(action)    
     switch (action.type) {
         case 'SET':
-            console.log(action.message)
-        case 'CLEAR':
-            console.log("removed")
+            return state.concat(`you ${action.event} '${action.data}'`)
+        case 'UNSET':
+            return []
         default:
             return state
     }
 }
 
-export const notificationChange = (message) => {
+export const setNotification = (data, event) => {
     return {
-        type: 'SET_MESSAGE',
-        message
+        type: 'SET',
+        data,
+        event
+    }
+}
+
+export const unsetNotification = (data) => {
+    return {
+        type: 'UNSET',
+        data
     }
 }
 
