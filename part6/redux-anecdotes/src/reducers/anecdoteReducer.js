@@ -19,6 +19,8 @@
 
 // const initialState = anecdotesAtStart.map(asObject)
 
+import anecdoteService from '../services/anecdotes'
+
 const anecdoteReducer = (state = [], action) => {
 
   switch (action.type) {
@@ -59,10 +61,13 @@ export const createAction = (anecdote) => {
   }
 }
 
-export const initializeAnecdotes = (anecdotes) => {
-  return {
-    type: 'INIT',
-    data: anecdotes
+export const initializeAnecdotes = () => {
+  return async dispatch => {
+    const anecdotes = await anecdoteService.getAll()
+    dispatch({
+      type: 'INIT',
+      data: anecdotes
+    })
   }
 }
 
