@@ -12,7 +12,7 @@ const AnecdoteList = () => {
     const filteredAnecdotes = anecdotes.filter(anecdote => anecdote.content.includes(filter))
 
     const vote = (anecdote) => {
-        dispatch(voteAction(anecdote.id))
+        dispatch(voteAction(anecdote))
         dispatch(setNotification(anecdote.content, "voted"))
         setTimeout(() => {
             dispatch(unsetNotification(anecdote.content))
