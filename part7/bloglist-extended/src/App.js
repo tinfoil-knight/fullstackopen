@@ -11,11 +11,12 @@ import BlogForm from './components/BlogForm'
 const App = () => {
   const dispatch = useDispatch()
   const message = useSelector(state => state.notification)
+  const blogs = useSelector(state => state.blogs)
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [blogs, setBlogs] = useState([])
+
   const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' })
   const [visible, setVisible] = useState(false)
 
@@ -25,9 +26,12 @@ const App = () => {
   useEffect(() => {
     blogService
       .getAll().then(initialBlogs => {
-        setBlogs(initialBlogs)
+        dispatch({
+          type: 'INIT',
+          data: initialBlogs
+        })
       })
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -86,7 +90,10 @@ const App = () => {
       blogService
         .create(blogObject, user.username)
         .then(returnedObject => {
-          setBlogs(blogs.concat(returnedObject))
+          dispatch({
+            type: 'CREATE',
+            data: returnedObject
+          })
           setNewBlog({ title: '', author: '', url: '' })
           handleMessage(`a new blog ${returnedObject.title} by ${returnedObject.author} added`)
         })
