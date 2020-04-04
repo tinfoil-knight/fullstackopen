@@ -96,9 +96,9 @@ const CreateNew = (props) => {
 
   const handleReset = (e) => {
     e.preventDefault()
-    contentState.reset()
-    authorState.reset()
-    infoState.reset()
+    contentState.onReset()
+    authorState.onReset()
+    infoState.onReset()
   }
 
   const contentState = useField('text')
