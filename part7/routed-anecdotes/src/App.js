@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
+
 import {
   BrowserRouter as Router,
   Switch, Route, Link, useParams, useHistory
 } from "react-router-dom"
+
+import { useField } from './hooks'
 
 const Menu = () => {
   const padding = {
@@ -76,9 +79,6 @@ const Notification = ({ message }) => {
 
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
 
   const history = useHistory()
 
@@ -94,6 +94,14 @@ const CreateNew = (props) => {
     history.push('/')
   }
 
+  const contentState = useField('text')
+  const authorState = useField('text')
+  const infoState = useField('text')
+
+  const content = contentState.value
+  const author = authorState.value
+  const info = infoState.value
+
 
 
   return (
@@ -102,15 +110,15 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input name='content' {...contentState} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input name='author' {...authorState} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e) => setInfo(e.target.value)} />
+          <input name='info' {...infoState} />
         </div>
         <button>create</button>
       </form>
