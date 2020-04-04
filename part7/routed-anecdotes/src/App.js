@@ -94,6 +94,13 @@ const CreateNew = (props) => {
     history.push('/')
   }
 
+  const handleReset = (e) => {
+    e.preventDefault()
+    contentState.reset()
+    authorState.reset()
+    infoState.reset()
+  }
+
   const contentState = useField('text')
   const authorState = useField('text')
   const infoState = useField('text')
@@ -120,7 +127,8 @@ const CreateNew = (props) => {
           url for more info
           <input name='info' {...infoState} />
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
+        <button type="reset" onClick={handleReset}>reset</button>
       </form>
     </div>
   )
