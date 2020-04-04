@@ -1,8 +1,11 @@
 import React from 'react'
 import { useState } from 'react'
 import blogService from '../services/blogs'
+import { useDispatch } from 'react-redux'
 
 const Blog = ({ blog }) => {
+
+  const dispatch = useDispatch()
 
   const blogStyle = {
     paddingTop: 10,
@@ -13,21 +16,20 @@ const Blog = ({ blog }) => {
   }
 
   const [visible, setVisible] = useState(false)
-  const [likes, setLikes] = useState(blog.likes)
 
   const handleLike = async (blog) => {
     const blogPost = {
-      title: blog.title,
+      ...blog,
       likes: blog.likes + 1,
-      author: blog.author,
-      url: blog.url,
-      user: blog.user
     }
 
     try {
-      blogService
-        .update(blogPost, blog.id)
-        .then(responseObject => setLikes(responseObject.likes))
+      const response = await blogService.update(blogPost, blog.id)
+      const id = response.id
+      dispatch({
+        type: 'LIKE',
+        id
+      })
     }
     catch (exception) {
       alert(exception)
@@ -37,10 +39,11 @@ const Blog = ({ blog }) => {
   const handleDelete = async (id) => {
     if (window.confirm('Remove blog?')) {
       try {
-        blogService
-          .deleteBlog(id)
-        // Doesn't handle the array of blog since it is here, move this out if you
-        // want to update the blog array when a blog gets deleted
+        await blogService.deleteBlog(id)
+        dispatch({
+          type: 'DELETE',
+          id
+        })
       }
       catch (exception) {
         alert(exception)
@@ -62,14 +65,12 @@ const Blog = ({ blog }) => {
           {blog.url}
         </div>
         <div>
-          likes <span>{likes}</span> <button type="button" onClick={() => handleLike(blog)}>like</button>
+          likes <span>{blog.likes}</span> <button type="button" onClick={() => handleLike(blog)}>like</button>
         </div>
         <div>
           {blog.user.name}
         </div>
         <button type="button"
-          // For testing
-          // style={{ display: JSON.parse(window.localStorage.getItem('loggedBlogappUser')).username === blog.user.username ? '' : 'none' }}
           onClick={() => handleDelete(blog.id)}>remove</button>
       </div>
     </div>
