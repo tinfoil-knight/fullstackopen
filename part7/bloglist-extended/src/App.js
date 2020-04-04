@@ -10,13 +10,13 @@ import BlogForm from './components/BlogForm'
 
 const App = () => {
   const dispatch = useDispatch()
-  
+
   const message = useSelector(state => state.notification)
   const blogs = useSelector(state => state.blogs)
+  const user = useSelector(state => state.user)
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
 
   const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' })
   const [visible, setVisible] = useState(false)
@@ -38,10 +38,13 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      dispatch({
+        type: 'LOGIN',
+        data: user
+      })
       blogService.setToken(user.token)
     }
-  }, [])
+  }, [dispatch])
 
   const handleMessage = (text) => {
     dispatch({
@@ -65,7 +68,10 @@ const App = () => {
         'loggedBlogappUser', JSON.stringify(user)
       )
 
-      setUser(user)
+      dispatch({
+        type: 'LOGIN',
+        data: user
+      })
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -74,6 +80,9 @@ const App = () => {
   }
 
   const handleLogout = () => {
+    dispatch({
+      type: 'LOGOUT'
+    })
     window.localStorage.clear()
   }
 
