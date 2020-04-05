@@ -1,12 +1,19 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import {
+  BrowserRouter as Router,
+  Switch, Route
+} from "react-router-dom"
 
 import loginService from './services/login'
 import blogService from './services/blogs'
+import userService from './services/users'
 
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
+import Users from './components/Users'
+
 
 const App = () => {
   const dispatch = useDispatch()
@@ -15,6 +22,7 @@ const App = () => {
   const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
 
+  const [users, setUsers] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -24,7 +32,8 @@ const App = () => {
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
 
-  useEffect(() => {
+
+  const blogsHook = () => {
     blogService
       .getAll().then(initialBlogs => {
         dispatch({
@@ -32,9 +41,16 @@ const App = () => {
           data: initialBlogs
         })
       })
-  }, [dispatch])
+  }
+  useEffect(blogsHook, [dispatch])
 
-  useEffect(() => {
+
+  const usersHook = () => {
+    userService.getAll().then(users => setUsers(users))
+  }
+  useEffect(usersHook, [])
+
+  const loginHook = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
@@ -44,7 +60,8 @@ const App = () => {
       })
       blogService.setToken(user.token)
     }
-  }, [dispatch])
+  }
+  useEffect(loginHook, [dispatch])
 
   const handleMessage = (text) => {
     dispatch({
@@ -115,6 +132,7 @@ const App = () => {
 
   }
 
+
   if (user === null) {
     return (
       <>
@@ -142,22 +160,31 @@ const App = () => {
         <p><b>{message}</b></p>
         {user.name} logged in <button type="button" onClick={handleLogout}>logout</button>
       </div>
-      <div>
-        <div style={hideWhenVisible}>
-          <button type="button" onClick={() => setVisible(true)}>new note</button>
-        </div>
-        <div style={showWhenVisible}>
-          <BlogForm handleSubmit={handleSubmit} newBlog={newBlog} setVisible={setVisible} setNewBlog={setNewBlog} />
-        </div>
-        <div>
-          {blogs.sort((a, b) => (a.likes > b.likes) ? -1 : 1).map(blog =>
-            <Blog key={blog.id} blog={blog} />
-          )}
-        </div>
-      </div>
+      <Router>
+        <Switch>
+          <Route path="/users">
+            <Users users={users} />
+          </Route>
+          <Route path="/">
+            <div>
+              <div style={hideWhenVisible}>
+                <button type="button" onClick={() => setVisible(true)}>new note</button>
+              </div>
+              <div style={showWhenVisible}>
+                <BlogForm handleSubmit={handleSubmit} newBlog={newBlog} setVisible={setVisible} setNewBlog={setNewBlog} />
+              </div>
+              <div>
+                {blogs.sort((a, b) => (a.likes > b.likes) ? -1 : 1).map(blog =>
+                  <Blog key={blog.id} blog={blog} />
+                )}
+              </div>
+            </div>
+          </Route>
+        </Switch>
+      </Router>
+
     </>
   )
-
 }
 
 export default App

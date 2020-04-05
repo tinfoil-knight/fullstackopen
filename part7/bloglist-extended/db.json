@@ -1,0 +1,47 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "matilda",
+      "name": "Matilda Legstone",
+      "passwordHash": "$2b$10$yPBphDCJX1s1uAmpXTJtlebac4ymWddFHAlsrWUnI3PIOqFYxM9l6"
+    },
+    {
+      "id": 2,
+      "username": "mluukai",
+      "name": "Matti Luukkainen",
+      "passwordHash": "$2b$10$TzaRO3MJUDehbGi5w99lRO315wIVO1hT1elRPhr8aI07U9CHdMRJe"
+    },
+    {
+      "id": 3,
+      "username": "valentino",
+      "name": "Venla Ruuska",
+      "passwordHash": "$2y$10$JWiLDcWF5e3qxGwMZGAB6eRZ.GUFYq0UTyGkCla3qZk5NBb8oi5G"
+    }
+  ],
+  "blogs": [
+    {
+      "id": 1,
+      "title": "Some Code Things",
+      "author": "Bro Guy",
+      "user": "1",
+      "url": "gofuhyourself.com",
+      "likes": 3
+    },
+    {
+      "id": 2,
+      "title": "Vue vs React",
+      "author": "Gus Boy",
+      "user": "2",
+      "url": "reactpatterns.com",
+      "likes": 6
+    },
+    {
+      "title": "Lifecycle Methods",
+      "author": "Martin Fowler",
+      "url": "fowler.com/blog",
+      "userId": 1,
+      "id": 3
+    }
+  ]
+}
