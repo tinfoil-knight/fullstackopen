@@ -13,7 +13,7 @@ import userService from './services/users'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Users from './components/Users'
-
+import User from './components/User'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -48,7 +48,7 @@ const App = () => {
   const usersHook = () => {
     userService.getAll().then(users => setUsers(users))
   }
-  useEffect(usersHook, [])
+  useEffect(usersHook, [blogs])
 
   const loginHook = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -162,6 +162,9 @@ const App = () => {
       </div>
       <Router>
         <Switch>
+          <Route path="/users/:id">
+            <User users={users} />
+          </Route>
           <Route path="/users">
             <Users users={users} />
           </Route>
@@ -182,7 +185,6 @@ const App = () => {
           </Route>
         </Switch>
       </Router>
-
     </>
   )
 }
