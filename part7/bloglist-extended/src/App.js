@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   BrowserRouter as Router,
-  Switch, Route
+  Switch, Route, Link
 } from "react-router-dom"
 
 import loginService from './services/login'
@@ -12,8 +12,10 @@ import userService from './services/users'
 
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
+import BlogView from './components/BlogView'
 import Users from './components/Users'
 import User from './components/User'
+
 
 const App = () => {
   const dispatch = useDispatch()
@@ -168,6 +170,9 @@ const App = () => {
           <Route path="/users">
             <Users users={users} />
           </Route>
+          <Route path="/blogs/:id">
+            <BlogView blogs={blogs} />
+          </Route>
           <Route path="/">
             <div>
               <div style={hideWhenVisible}>
@@ -178,7 +183,7 @@ const App = () => {
               </div>
               <div>
                 {blogs.sort((a, b) => (a.likes > b.likes) ? -1 : 1).map(blog =>
-                  <Blog key={blog.id} blog={blog} />
+                  <><Link to={`/blogs/${blog.id}`}><Blog key={blog.id} blog={blog} /></Link></>
                 )}
               </div>
             </div>
