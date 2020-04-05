@@ -2,6 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import blogService from '../services/blogs'
 import { useDispatch } from 'react-redux'
+import Button from 'react-bootstrap/Button';
 
 const Blog = ({ blog }) => {
 
@@ -58,20 +59,20 @@ const Blog = ({ blog }) => {
   return (
     <div style={blogStyle}>
       <span>{blog.title}</span> <span>{blog.author}</span>
-      <button type="button" onClick={() => setVisible(true)} style={hideWhenVisible}>view</button>
+      <Button variant="outline-secondary" type="button" onClick={() => setVisible(true)} style={hideWhenVisible}>view</Button>
       <div style={showWhenVisible} className="test">
-        <button type="button" onClick={() => setVisible(false)}>hide</button>
+        <Button variant="outline-secondary" type="button" onClick={() => setVisible(false)}>hide</Button>
         <div>
           {blog.url}
         </div>
         <div>
-          likes <span>{blog.likes}</span> <button type="button" onClick={() => handleLike(blog)}>like</button>
+          likes <span>{blog.likes}</span> <Button variant="outline-secondary" type="button" onClick={() => handleLike(blog)}>like</Button>
         </div>
         <div>
           {blog.user.name}
         </div>
-        <button type="button"
-          onClick={() => handleDelete(blog.id)}>remove</button>
+        <Button variant="outline-secondary" type="button"
+          onClick={() => handleDelete(blog.id)}>remove</Button>
       </div>
     </div>
   )

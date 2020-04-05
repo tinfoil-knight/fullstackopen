@@ -16,6 +16,8 @@ import BlogView from './components/BlogView'
 import Users from './components/Users'
 import User from './components/User'
 
+import Button from 'react-bootstrap/Button';
+
 const Navigation = () => {
   return (
     <>
@@ -144,9 +146,9 @@ const App = () => {
 
   if (user === null) {
     return (
-      <>
+      <div className="container">
         <h2>Log in to application</h2>
-        <p><b>{message}</b></p>
+        <div><b>{message}</b></div>
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -156,18 +158,18 @@ const App = () => {
             password
             <input type="password" value={password} id="password" name="Password" onChange={({ target }) => setPassword(target.value)} />
           </div>
-          <button type="submit">login</button>
+          <Button variant="outline-dark" type="submit">login</Button>
         </form>
-      </>
+      </div>
     )
   }
 
   return (
-    <>
+    <div className="container">
       <Router>
         <div>
           <Navigation />
-          <span>{user.name} logged in <button type="button" onClick={handleLogout}>logout</button></span>
+          <span>{user.name} logged in <Button variant="outline-dark" type="button" onClick={handleLogout}>logout</Button></span>
           <p><b>{message}</b></p>
           <h2>blogs</h2>
         </div>
@@ -188,7 +190,7 @@ const App = () => {
           <Route path="/">
             <div>
               <div style={hideWhenVisible}>
-                <button type="button" onClick={() => setVisible(true)}>new note</button>
+                <Button variant="outline-dark" type="button" onClick={() => setVisible(true)}>new note</Button>
               </div>
               <div style={showWhenVisible}>
                 <BlogForm handleSubmit={handleSubmit} newBlog={newBlog} setVisible={setVisible} setNewBlog={setNewBlog} />
@@ -202,7 +204,7 @@ const App = () => {
           </Route>
         </Switch>
       </Router>
-    </>
+    </div>
   )
 }
 
