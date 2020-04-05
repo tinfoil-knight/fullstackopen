@@ -16,7 +16,14 @@ import BlogView from './components/BlogView'
 import Users from './components/Users'
 import User from './components/User'
 
-
+const Navigation = () => {
+  return (
+    <>
+      <Link to="/">blogs</Link>
+      <Link to="/users"> users</Link>
+    </>
+  )
+}
 const App = () => {
   const dispatch = useDispatch()
 
@@ -157,22 +164,27 @@ const App = () => {
 
   return (
     <>
-      <div>
-        <h2>blogs</h2>
-        <p><b>{message}</b></p>
-        {user.name} logged in <button type="button" onClick={handleLogout}>logout</button>
-      </div>
       <Router>
+        <div>
+          <Navigation />
+          <span>{user.name} logged in <button type="button" onClick={handleLogout}>logout</button></span>
+          <p><b>{message}</b></p>
+          <h2>blogs</h2>
+        </div>
+
         <Switch>
           <Route path="/users/:id">
             <User users={users} />
           </Route>
+
           <Route path="/users">
             <Users users={users} />
           </Route>
+
           <Route path="/blogs/:id">
             <BlogView blogs={blogs} />
           </Route>
+
           <Route path="/">
             <div>
               <div style={hideWhenVisible}>
