@@ -9,12 +9,13 @@ const Book = require('./models/book')
 mongoose.set('useFindAndModify', false)
 mongoose.set('useCreateIndex', true)
 mongoose.set('useUnifiedTopology', true)
+mongoose.set('useNewUrlParser', true)
 
 const MONGODB_URI = process.env.MONGODB_URI
 
 console.log('connecting to', MONGODB_URI)
 
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
+mongoose.connect(MONGODB_URI)
     .then(() => {
         console.log('connected to MongoDB')
     })
@@ -33,7 +34,7 @@ type Author {
 type Book {
     title: String!
     published: Int
-    author: Author
+    author: Author!
     id: ID!
     genres: [String]!
 }
@@ -49,7 +50,7 @@ type Mutation {
     addBook(
         title: String!
         published: Int
-        author: String
+        author: String!
         genres: [String]!
     ) : Book
     editAuthor(
@@ -63,34 +64,32 @@ const resolvers = {
     Query: {
         bookCount: () => Book.collection.countDocuments(),
         authorCount: () => Author.collection.countDocuments(),
-        allBooks: (root, args) => Book.find({}),
-        // .filter(book => !args.author ? book : book.author === args.author)
-        // .filter(book => !args.genre ? book : book.genres.includes(args.genre)),
+        allBooks: (root, args) => Book.find(!args.genre ? {} : { genres: args.genre }),
         allAuthors: () => Author.find({})
     },
-    // Author: {
-    //     bookCount: (root) => {
-    //         return books.filter(book => book.author === root.name).length
-    //     }
-    // },
+    Book: {
+        author: (root) => {
+            return Author.findById(root.author)
+        }
+    },
+    Author: {
+        bookCount: (root) => {
+            return Book.find({ author: root.id }).length
+        }
+    },
     Mutation: {
-        addBook: (root, args) => {
-            const book = new Book({ ...args })
-            return book.save()
+        addBook: async (root, args) => {
+            const search = await Author.find({ name: args.author })
 
-            // if (!authors.find(author => author.name === book.author)) {
-            //     authors = authors.concat({ name: book.author, id: uuidv4() })
-            // }
+            const author = search.length ? search[0] : await (new Author({ name: args.author })).save()
+            const book = new Book({ ...args, author: author._id })
+
+            return await book.save()
         },
-        // editAuthor: (root, args) => {
-        //     const authorToUpdate = authors.find(author => author.name === args.name)
-        //     if (!authorToUpdate) {
-        //         return null
-        //     }
-        //     const updatedAuthor = { ...authorToUpdate, born: args.setBornTo }
-        //     authors = authors.map(author => author.id !== updatedAuthor.id ? author : updatedAuthor)
-        //     return updatedAuthor
-        // }
+        editAuthor: async (root, args) => {
+            const updatedAuthor = await Author.findOneAndUpdate({ name: args.name }, { born: args.setBornTo }, { new: true })
+            return updatedAuthor
+        }
     }
 }
 
