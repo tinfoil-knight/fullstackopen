@@ -10,6 +10,7 @@
     "apollo-server": "^2.11.0",
     "dotenv": "^8.2.0",
     "graphql": "^15.0.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.7",
     "uuid": "^7.0.3"
   },
