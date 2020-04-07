@@ -42,7 +42,7 @@ type Book {
 type Query {
     bookCount: Int!
     authorCount: Int!
-    allBooks(author: String, genre: String): [Book!]!
+    allBooks(genre: String): [Book!]!
     allAuthors: [Author!]!
 }
 
@@ -68,14 +68,10 @@ const resolvers = {
         allAuthors: () => Author.find({})
     },
     Book: {
-        author: (root) => {
-            return Author.findById(root.author)
-        }
+        author: (root) => Author.findById(root.author)
     },
     Author: {
-        bookCount: (root) => {
-            return Book.find({ author: root.id }).length
-        }
+        bookCount: (root) => Book.find({ author: root.id }).length
     },
     Mutation: {
         addBook: async (root, args) => {
@@ -84,11 +80,31 @@ const resolvers = {
             const author = search.length ? search[0] : await (new Author({ name: args.author })).save()
             const book = new Book({ ...args, author: author._id })
 
-            return await book.save()
+            try {
+                await book.save()
+            }
+            catch (error) {
+                throw new UserInputError(error.message, {
+                    invalidArgs: args,
+                })
+            }
+
+            return book
         },
         editAuthor: async (root, args) => {
-            const updatedAuthor = await Author.findOneAndUpdate({ name: args.name }, { born: args.setBornTo }, { new: true })
-            return updatedAuthor
+            const author = Author.findOne({ name: args.name })
+            author.born = args.setBornTo
+
+            try {
+                await author.save()
+            }
+            catch (error) {
+                throw new UserInputError(error.message, {
+                    invalidArgs: args,
+                })
+            }
+
+            return author
         }
     }
 }
