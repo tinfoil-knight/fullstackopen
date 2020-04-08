@@ -16,12 +16,20 @@ const Authors = (props) => {
   const submit = async (event) => {
     event.preventDefault()
     const setBornTo = year
-    await editAuthor({
-      variables: { name, setBornTo }
-    })
+    console.log("editing", name, "with", setBornTo)
+    try {
+      await editAuthor({
+        variables: { name, setBornTo }
+      })
+    }
+    catch (error) {
+      console.log(error)
+    }
+    finally {
+      setName('')
+      setYear('')
+    }
 
-    setName('')
-    setYear('')
   }
 
   const results = useQuery(ALL_AUTHORS)
@@ -30,7 +38,11 @@ const Authors = (props) => {
     return null
   }
 
-  if (results.loading) {
+  if (results.error){
+    console.log(results.error.message)
+  }
+  
+  if (results.loading || results.error) {
     return <div>loading...</div>
   }
 
@@ -63,16 +75,13 @@ const Authors = (props) => {
           <div>
             name
             <select value={name} onChange={({ target }) => setName(target.value)}>
-            {results.data.allAuthors.map(author => <option key={author.name} value={author.name}>{author.name}</option>)}
+              <option hidden>Choose Author</option>
+              {results.data.allAuthors.map(author => <option key={author.name} value={author.name}>{author.name}</option>)}
             </select>
           </div>
           <div>
             born
-          <input
-              type='number'
-              value={year}
-              onChange={({ target }) => setYear(parseInt(target.value))}
-            />
+          <input type='number' value={year} onChange={({ target }) => setYear(parseInt(target.value))} />
           </div>
           <button type='submit'>update author</button>
         </form>

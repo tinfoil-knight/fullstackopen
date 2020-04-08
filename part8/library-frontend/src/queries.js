@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export const ALL_AUTHORS = gql`
-query {
+query allAuthors{
     allAuthors {
       name
       born
@@ -11,7 +11,7 @@ query {
 `
 
 export const ALL_BOOKS = gql`
-query {
+query allBooks{
     allBooks {
       title
       author {
@@ -44,6 +44,17 @@ mutation editAuthor($name: String!, $setBornTo: Int!) {
   ) {
     name
     born
+  }
+}
+`
+
+export const LOGIN = gql`
+mutation loginUser($username: String!, $password: String! ){
+  login(
+    username: $username
+    password: $password
+  ) {
+    value
   }
 }
 `

@@ -98,14 +98,13 @@ const resolvers = {
     },
     Author: {
         bookCount: async (root) => {
-            console.log("trying")
             const books = await Book.find({ author: root.id })
-            console.log(books)
             return books.length
         }
     },
     Mutation: {
         addBook: async (root, args, context) => {
+            console.log("adding a book...")
             const currentUser = context.currentUser
 
             if (!currentUser) {
@@ -119,6 +118,7 @@ const resolvers = {
 
             try {
                 await book.save()
+                console.log("book added!")
             }
             catch (error) {
                 throw new UserInputError(error.message, {
@@ -130,6 +130,7 @@ const resolvers = {
         },
 
         editAuthor: async (root, args, context) => {
+            console.log("updating an author with", args)
             const currentUser = context.currentUser
 
             if (!currentUser) {
@@ -137,7 +138,9 @@ const resolvers = {
             }
 
             try {
-                return (await Author.findOneAndUpdate({ name: args.name }, { born: args.setBornTo }, { new: true }))
+                const updatedAuthor = await Author.findOneAndUpdate({ name: args.name }, { born: args.setBornTo }, { new: true })
+                console.log("author updated!")
+                return updatedAuthor
             }
             catch (error) {
                 throw new UserInputError(error.message, {
@@ -147,9 +150,11 @@ const resolvers = {
         },
 
         createUser: async (root, args) => {
+            console.log("creating a user with", args)
             const user = new User({ username: args.username })
             try {
                 await user.save()
+                console.log("user added!")
             }
             catch (error) {
                 throw new UserInputError(error.message, {
@@ -161,6 +166,7 @@ const resolvers = {
         },
 
         login: async (root, args) => {
+            console.log("logging in with", args)
             const user = await User.findOne({ username: args.username })
 
             if (!user || args.password !== 'secred') {
@@ -188,10 +194,21 @@ const context = async ({ req }) => {
     }
 }
 
+const logger = {
+    // Fires whenever a GraphQL request is received from a client.
+    requestDidStart(requestContext) {
+        console.log("received request:")
+        console.log(requestContext.request.operationName)
+        console.log(requestContext.request.variables)
+    }
+}
+
+
 const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context: context
+    context: context,
+    plugins: [logger]
 })
 
 server.listen().then(({ url }) => {
