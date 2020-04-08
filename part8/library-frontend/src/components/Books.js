@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { useQuery } from '@apollo/client'
+import { useQuery, useLazyQuery } from '@apollo/client'
 
 import { ALL_BOOKS } from '../queries'
 
 const Books = (props) => {
 
   const results = useQuery(ALL_BOOKS)
+  const [getFilteredBooks, filteredBooks] = useLazyQuery(ALL_BOOKS)
   const [books, setBooks] = useState([])
   const [genres, setGenres] = useState([])
   const [genre, setGenre] = useState(null)
@@ -18,7 +19,17 @@ const Books = (props) => {
       const genres = Array.from(new Set(results.data.allBooks.map(book => book.genres).reduce(reducer, [])))
       setGenres(genres)
     }
-  }, [results]) // eslint-disable-line
+  }, [results.data]) 
+
+  useEffect(() => {
+    if (genre){
+      getFilteredBooks({ variables: { genre: genre } })
+      if (filteredBooks.data){
+        console.log(filteredBooks.data)
+        setBooks(filteredBooks.data.allBooks)
+      }   
+    }
+  }, [genre, filteredBooks.data]) // eslint-disable-line
 
   if (!props.show) {
     return null
@@ -47,7 +58,7 @@ const Books = (props) => {
               published
             </th>
           </tr>
-          {books.filter(book => genre ? book.genres.includes(genre) : book).map(a =>
+          {books.map(a =>
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>
@@ -58,6 +69,7 @@ const Books = (props) => {
       </table>
       <div>
         {genres.map(item => <button key={item} onClick={() => setGenre(item)}>{item}</button>)}
+        <button onClick={() => setGenre(null)}>all</button>
       </div>
     </div>
   )

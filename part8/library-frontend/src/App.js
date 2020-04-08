@@ -20,7 +20,6 @@ const App = () => {
   useEffect(() => {
     if (result.data) {
       setUser(result.data.me)
-      console.log(result.data.me)
     }
   }, [result.data])
 

@@ -11,16 +11,16 @@ const Books = ({ show, user }) => {
   const [genre, setGenre] = useState(null)
 
   useEffect(() => {
-    if (results.data) {
-      setBooks(results.data.allBooks)
-    }
-  }, [results.data])
-
-  useEffect(() => {
     if (user){
       setGenre(user.favoriteGenre)
     }
   }, [user]) // eslint-disable-line
+
+  useEffect(() => {
+    if (results.data) {
+      setBooks(results.data.allBooks)
+    }
+  }, [results.data])
 
 
   if (!show) {
