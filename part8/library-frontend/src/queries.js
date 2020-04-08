@@ -18,6 +18,7 @@ query allBooks{
         name
       }
       published
+      genres
     }
   }  
 `

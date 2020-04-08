@@ -29,7 +29,6 @@ const Authors = (props) => {
       setName('')
       setYear('')
     }
-
   }
 
   const results = useQuery(ALL_AUTHORS)
@@ -38,10 +37,10 @@ const Authors = (props) => {
     return null
   }
 
-  if (results.error){
+  if (results.error) {
     console.log(results.error.message)
   }
-  
+
   if (results.loading || results.error) {
     return <div>loading...</div>
   }
