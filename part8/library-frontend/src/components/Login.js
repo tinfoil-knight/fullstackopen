@@ -3,7 +3,7 @@ import { useMutation } from '@apollo/client'
 
 import { LOGIN } from '../queries'
 
-const Login = ({ show, setToken }) => {
+const Login = ({ show, setToken, setPage }) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
@@ -22,6 +22,7 @@ const Login = ({ show, setToken }) => {
             console.log("setting token")
             setToken(token)
             localStorage.setItem('library-user-token', token)
+            setPage('books')
         }
     }, [result.data]) // eslint-disable-line
 

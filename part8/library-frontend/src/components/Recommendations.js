@@ -3,24 +3,27 @@ import { useQuery } from '@apollo/client'
 
 import { ALL_BOOKS } from '../queries'
 
-const Books = (props) => {
+const Books = ({ show, user }) => {
 
   const results = useQuery(ALL_BOOKS)
-  const [books, setBooks] = useState([])
-  const [genres, setGenres] = useState([])
-  const [genre, setGenre] = useState(null)
 
-  const reducer = (accumulator, currentValue) => [...accumulator, ...currentValue]
+  const [books, setBooks] = useState([])
+  const [genre, setGenre] = useState(null)
 
   useEffect(() => {
     if (results.data) {
       setBooks(results.data.allBooks)
-      const genres = Array.from(new Set(results.data.allBooks.map(book => book.genres).reduce(reducer, [])))
-      setGenres(genres)
     }
-  }, [results]) // eslint-disable-line
+  }, [results.data])
 
-  if (!props.show) {
+  useEffect(() => {
+    if (user){
+      setGenre(user.favoriteGenre)
+    }
+  }, [user]) // eslint-disable-line
+
+
+  if (!show) {
     return null
   }
 
@@ -34,8 +37,8 @@ const Books = (props) => {
 
   return (
     <div>
-      <h2>books</h2>
-      <div>in genre <b>{genre ? genre : "all"}</b></div>
+      <h2>recommendations</h2>
+      <div>books in  your favorite genre: <b>{genre ? genre : "all"}</b></div>
       <table>
         <tbody>
           <tr>
@@ -56,9 +59,6 @@ const Books = (props) => {
           )}
         </tbody>
       </table>
-      <div>
-        {genres.map(item => <button key={item} onClick={() => setGenre(item)}>{item}</button>)}
-      </div>
     </div>
   )
 }
