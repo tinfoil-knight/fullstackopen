@@ -64,7 +64,10 @@ const calculateExercises = (hours: number[], target: number): Report => {
 
 };
 
-const target = Number(process.argv[2]);
-const hours: number[] = process.argv.slice(3).map(el => Number(el));
+// const target = Number(process.argv[2]);
+// const hours: number[] = process.argv.slice(3).map(el => Number(el));
 
-console.log(calculateExercises(hours, target));
+// console.log(calculateExercises(hours, target));
+
+export default calculateExercises;
+

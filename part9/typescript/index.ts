@@ -1,7 +1,11 @@
 import express from 'express';
+import bodyParser from 'body-parser';
+
 import calculateBmi from './bmiCalculator';
+import calculateExercises from './exerciseCalculator';
 
 const app = express();
+app.use(bodyParser.json());
 
 app.get('/', (_req, res) => {
     res.send('Hello Full Stack!');
@@ -21,10 +25,20 @@ app.get('/bmi', (req, res) => {
         catch (error) {
             console.log(error);
         }
-
     }
+});
 
-
+app.post('/exercises', (req, res) => {
+    const body = req.body;
+    if (!body.daily_exercises || !body.target) {
+        res.json({ "error": "parameters missing" });
+    }
+    try {
+        res.json(calculateExercises(body.daily_exercises, body.target));
+    }
+    catch (error) {
+        console.log(error.message);
+    }
 });
 
 const PORT = 3003;
