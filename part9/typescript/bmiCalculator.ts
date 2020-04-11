@@ -4,29 +4,29 @@
 * @returns {string} situational descriptor
 */
 const calculateBmi = (height: number, weight: number): string => {
-    const bmi: number = (weight / Math.pow(height, 2)) * 10000
+    const bmi: number = (weight / Math.pow(height, 2)) * 10000;
 
     if (bmi <= 16) {
-        return "Severely underweight"
+        return "Severely underweight";
     }
     if (bmi > 16 && bmi <= 18.5) {
-        return "Underweight"
+        return "Underweight";
     }
     if (bmi > 18.5 && bmi <= 25) {
-        return "Normal (healthy weight)"
+        return "Normal (healthy weight)";
     }
     if (bmi > 25 && bmi <= 30) {
-        return "Overweight"
+        return "Overweight";
     }
     if (bmi > 30 && bmi <= 35) {
-        return "Moderately obese"
+        return "Moderately obese";
     }
     if (bmi > 35) {
-        return "Severely obese"
+        return "Severely obese";
     }
 
-    return "Error"
-}
+    return "Error";
+};
 
 // const height: number = Number(process.argv[2])
 // const weight: number = Number(process.argv[3])
@@ -34,4 +34,4 @@ const calculateBmi = (height: number, weight: number): string => {
 // console.log(calculateBmi(height, weight))
 
 
-export default calculateBmi
+export default calculateBmi;
