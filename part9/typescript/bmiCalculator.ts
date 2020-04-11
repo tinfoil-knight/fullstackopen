@@ -3,8 +3,9 @@
 * @param {number} height : in cm
 * @returns {string} situational descriptor
 */
-const calculateBmi = (height: number, weight: number ): string => {
-    const bmi = (weight / Math.pow(height, 2)) * 10000
+const calculateBmi = (height: number, weight: number): string => {
+    const bmi: number = (weight / Math.pow(height, 2)) * 10000
+
     if (bmi <= 16) {
         return "Severely underweight"
     }
@@ -25,5 +26,8 @@ const calculateBmi = (height: number, weight: number ): string => {
     }
 }
 
-console.log(calculateBmi(180, 74))
+const height: number = Number(process.argv[2])
+const weight: number = Number(process.argv[3])
+
+console.log(calculateBmi(height, weight))
 
